@@ -112,7 +112,9 @@ const App = () => {
   };
 
   const createRectangle = () => {
-    docViewer.setToolMode(docViewer.getTool('AnnotationCreateRectangle'));
+    console.log("hh", window.Tools.HIGHLIGHT)
+    docViewer.setToolMode(docViewer.getTool(window.Tools.HIGHLIGHT));
+    // docViewer.setToolMode(docViewer.getTool('AnnotationCreateRectangle'));
   };
 
   const selectTool = () => {
