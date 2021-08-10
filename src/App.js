@@ -1,7 +1,10 @@
 import React, { useRef, useEffect, useState } from 'react';
 import SearchContainer from './components/SearchContainer';
-import { ReactComponent as ZoomIn } from './assets/icons/ic_zoom_in_black_24px.svg';
-import { ReactComponent as ZoomOut } from './assets/icons/ic_zoom_out_black_24px.svg';
+// import zoomin from './assets/images/circleMinus.png';
+import { ReactComponent as FullWidth } from './assets/images/fullView.svg';
+// import { ReactComponent as Zoom } from './assets/images/minus.svg';
+import { ReactComponent as ZoomIn } from './assets/images/plusCircle.svg';
+import { ReactComponent as ZoomOut } from './assets/images/minusCircle.svg';
 import { ReactComponent as AnnotationRectangle } from './assets/icons/ic_annotation_square_black_24px.svg';
 import { ReactComponent as AnnotationRedact } from './assets/icons/ic_annotation_add_redact_black_24px.svg';
 import { ReactComponent as AnnotationApplyRedact } from './assets/icons/ic_annotation_apply_redact_black_24px.svg';
@@ -49,7 +52,7 @@ const App = () => {
 
       docViewer.getDocument().getBookmarks().then((bookmarks) => {
         const pageIndexes = Object.keys(bookmarks).map(pageIndex => parseInt(pageIndex, 10));
-        console.log(bookmarks)
+        // console.log(bookmarks)
 
         const printOutlineTree = (item, level) => {
           const indent = ' '.repeat(level);
@@ -112,7 +115,6 @@ const App = () => {
   };
 
   const createRectangle = () => {
-    console.log("hh", window.Tools.HIGHLIGHT)
     docViewer.setToolMode(docViewer.getTool(window.Tools.ToolNames.HIGHLIGHT));
     // docViewer.setToolMode(docViewer.getTool('AnnotationCreateRectangle'));
   };
@@ -135,13 +137,16 @@ const App = () => {
     <div className="App">
       <div id="main-column">
         <div className="center" id="tools">
-          <button onClick={zoomOut}>
-            <ZoomOut />
-          </button>
           <button onClick={zoomIn}>
             <ZoomIn />
           </button>
-          <button onClick={createRectangle}>
+          <button onClick={zoomOut}>
+            <ZoomOut />
+          </button>
+          <button onClick={zoomOut}>
+            <FullWidth />
+          </button>
+          {/* <button onClick={createRectangle}>
             <AnnotationRectangle />
           </button>
           <button onClick={createRedaction}>
@@ -152,7 +157,7 @@ const App = () => {
           </button>
           <button onClick={selectTool}>
             <Select />
-          </button>
+          </button> */}
           <button
             onClick={() => {
               // Flip the boolean
@@ -160,8 +165,11 @@ const App = () => {
             }}
           >
             <Search />
-          </button>
+          </button> 
         </div>
+          {/* <div className='left-container'>abc</div>
+          <div className='right-container'>abc</div> */}
+
         <div className="flexbox-container" id="scroll-view" ref={scrollView}>
           {/* <div>
             <ul>
@@ -175,7 +183,7 @@ const App = () => {
               })}
             </ul>
           </div> */}
-          <div className="flexbox-container">
+          {/* <div className="flexbox-container">
             <SearchContainer
               Annotations={Annotations}
               annotManager={annotManager}
@@ -184,8 +192,18 @@ const App = () => {
               searchContainerRef={searchContainerRef}
               open={true}
             />
-          </div>
+          </div> */}
           <div id="viewer" ref={viewer}></div>
+          {/* <div className="flexbox-container">
+            <SearchContainer
+              Annotations={Annotations}
+              annotManager={annotManager}
+              docViewer={docViewer}
+              searchTermRef={searchTerm}
+              searchContainerRef={searchContainerRef}
+              open={true}
+            />
+          </div> */}
         </div>
       </div>
 
