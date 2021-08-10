@@ -18,6 +18,7 @@ const App = () => {
   const searchTerm = useRef(null);
   const searchContainerRef = useRef(null);
   const [bookmarks, setBookmarks] = useState([]);
+  const [highlighToolSelected, setHighlightToolSelected] = useState(false);
 
   const [docViewer, setDocViewer] = useState(null);
   const [annotManager, setAnnotManager] = useState(null);
@@ -114,9 +115,14 @@ const App = () => {
     docViewer.zoomTo(docViewer.getZoom() + 0.25);
   };
 
-  const createRectangle = () => {
-    docViewer.setToolMode(docViewer.getTool(window.Tools.ToolNames.HIGHLIGHT));
-    // docViewer.setToolMode(docViewer.getTool('AnnotationCreateRectangle'));
+  const createHighlight = () => {
+    highlighToolSelected ?
+      docViewer.setToolMode(docViewer.getTool(window.Tools.ToolNames.HIGHLIGHT)) : docViewer.setToolMode(docViewer.getTool('AnnotationEdit'));
+    setHighlightToolSelected(!highlighToolSelected);
+  };
+
+  const notesTool = () => {
+    docViewer.setToolMode(docViewer.getTool(window.Tools.ToolNames.STICKY));
   };
 
   const selectTool = () => {
@@ -146,10 +152,13 @@ const App = () => {
           <button onClick={zoomOut}>
             <FullWidth />
           </button>
-          {/* <button onClick={createRectangle}>
+          <button onClick={createHighlight}>
             <AnnotationRectangle />
           </button>
-          <button onClick={createRedaction}>
+          <button onClick={notesTool}>
+            <AnnotationRectangle />
+          </button>
+          {/*<button onClick={createRedaction}>
             <AnnotationRedact />
           </button>
           <button onClick={applyRedactions}>
