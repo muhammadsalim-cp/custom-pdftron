@@ -1,6 +1,7 @@
 import React, { useRef, useEffect, useState } from 'react';
 import SearchContainer from './components/SearchContainer';
 // import zoomin from './assets/images/circleMinus.png';
+import { Grid } from '@material-ui/core';
 import { ReactComponent as FullWidth } from './assets/images/fullView.svg';
 // import { ReactComponent as Zoom } from './assets/images/minus.svg';
 import { ReactComponent as ZoomIn } from './assets/images/plusCircle.svg';
@@ -17,8 +18,12 @@ const App = () => {
   const scrollView = useRef(null);
   const searchTerm = useRef(null);
   const searchContainerRef = useRef(null);
+  const pageInput = useRef(null);
   const [bookmarks, setBookmarks] = useState([]);
+  const [inputValue, setInputValue] = useState('');
+  const [totalPages, setTotalPages] = useState('');
   const [highlighToolSelected, setHighlightToolSelected] = useState(false);
+  const [fitWidth, setFitWidth] = useState(false);
 
   const [docViewer, setDocViewer] = useState(null);
   const [annotManager, setAnnotManager] = useState(null);
@@ -42,8 +47,13 @@ const App = () => {
     docViewer.loadDocument('/files/duckett.pdf');
 
     setDocViewer(docViewer);
+    pageInput.current.style.width = `${pageInput.current.value.length}ch`
 
     docViewer.on('documentLoaded', () => {
+      setInputValue(docViewer.getCurrentPage())
+      setTotalPages(docViewer.getPageCount())
+      pageInput.current.style.width = `${pageInput.current.value.length}ch`
+      // console.log('check', docViewer.getCurrentPage())
 
       docViewer.setToolMode(docViewer.getTool('AnnotationCreateSticky'));
       docViewer.setToolMode(docViewer.getTool('AnnotationCreateFreeText'));
@@ -115,6 +125,16 @@ const App = () => {
     docViewer.zoomTo(docViewer.getZoom() + 0.25);
   };
 
+  const fitMode = () => {
+    if(fitWidth){
+      docViewer.setFitMode(docViewer.FitMode.FitPage)
+    }else{
+      // docViewer.setFitMode(docViewer.FitMode.FitPage)
+      docViewer.setFitMode(docViewer.FitMode.FitWidth)
+    }
+    setFitWidth(!fitWidth)
+  }
+
   const createHighlight = () => {
     highlighToolSelected ?
       docViewer.setToolMode(docViewer.getTool(window.Tools.ToolNames.HIGHLIGHT)) : docViewer.setToolMode(docViewer.getTool('AnnotationEdit'));
@@ -139,26 +159,53 @@ const App = () => {
     await annotManager.applyRedactions();
   };
 
+  const pageNavigaton = (e) => {
+    e.preventDefault();
+    docViewer.setCurrentPage(inputValue)
+  }
+
   return (
     <div className="App">
       <div id="main-column">
-        <div className="center" id="tools">
-          <button onClick={zoomIn}>
-            <ZoomIn />
-          </button>
-          <button onClick={zoomOut}>
-            <ZoomOut />
-          </button>
-          <button onClick={zoomOut}>
-            <FullWidth />
-          </button>
-          <button onClick={createHighlight}>
-            <AnnotationRectangle />
-          </button>
-          <button onClick={notesTool}>
-            <AnnotationRectangle />
-          </button>
-          {/*<button onClick={createRedaction}>
+        <Grid container className='custom_header'>
+          <Grid item xs={3}></Grid>
+          <Grid item xs={6} className='operations_header'>
+            <div  id="tools">
+              <form onSubmit={pageNavigaton} onBlur={pageNavigaton}>
+                <span>Page: </span>
+                <input
+                  className='page_input'
+                  ref={pageInput}
+                  value={inputValue}
+                  onChange={(e) => {
+                    // e.target
+                    console.log()
+                    pageInput.current.style.width = `${pageInput.current.value.length}ch`
+                    setInputValue(e.target.value)
+                  }}
+                  onBlur={pageNavigaton}
+                /> / <span>{totalPages}</span>
+              </form>
+              <div className='zoom_buttons'>
+                <button onClick={zoomIn}>
+                  <ZoomIn />
+                </button>
+                <button onClick={zoomOut}>
+                  <ZoomOut />
+                </button>
+              </div>
+              <button onClick={fitMode}>
+                <FullWidth />
+              </button>
+
+              {/* <button onClick={createHighlight}>
+                <AnnotationRectangle />
+              </button>
+              <button onClick={notesTool}>
+                <AnnotationRectangle />
+              </button> */}
+
+              {/*<button onClick={createRedaction}>
             <AnnotationRedact />
           </button>
           <button onClick={applyRedactions}>
@@ -167,15 +214,25 @@ const App = () => {
           <button onClick={selectTool}>
             <Select />
           </button> */}
-          <button
-            onClick={() => {
-              // Flip the boolean
-              setSearchContainerOpen(prevState => !prevState);
-            }}
-          >
-            <Search />
-          </button>
-        </div>
+
+              {/* <button
+                onClick={() => {
+                  // Flip the boolean
+                  setSearchContainerOpen(prevState => !prevState);
+                }}
+              >
+                <Search />
+              </button> */}
+
+            </div>
+          </Grid>
+          <Grid item xs={3}></Grid>
+        </Grid>
+
+
+
+
+
         {/* <div className='left-container'>abc</div>
           <div className='right-container'>abc</div> */}
 

@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "private": true,
   "dependencies": {
+    "@material-ui/core": "^4.12.3",
     "@pdftron/webviewer": "^7.0.0",
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
