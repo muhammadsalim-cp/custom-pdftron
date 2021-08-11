@@ -34,12 +34,10 @@ const App = () => {
   // if using a class, equivalent of componentDidMount
   useEffect(() => {
     const CoreControls = window.CoreControls;
-    console.log(CoreControls);
+    const docViewer = new CoreControls.DocumentViewer();
+
     CoreControls.setWorkerPath('/webviewer');
     CoreControls.enableFullPDF(true);
-
-    const docViewer = new CoreControls.DocumentViewer();
-    const annotationManager = new CoreControls.AnnotationManager(docViewer);
 
     docViewer.setScrollViewElement(scrollView.current);
     docViewer.setViewerElement(viewer.current);
@@ -53,17 +51,12 @@ const App = () => {
       setInputValue(docViewer.getCurrentPage())
       setTotalPages(docViewer.getPageCount())
       pageInput.current.style.width = `${pageInput.current.value.length}ch`
-      // console.log('check', docViewer.getCurrentPage())
 
-      docViewer.setToolMode(docViewer.getTool('AnnotationCreateSticky'));
-      docViewer.setToolMode(docViewer.getTool('AnnotationCreateFreeText'));
       docViewer.setToolMode(docViewer.getTool('AnnotationEdit'));
 
       setAnnotManager(docViewer.getAnnotationManager());
 
       docViewer.getDocument().getBookmarks().then((bookmarks) => {
-        const pageIndexes = Object.keys(bookmarks).map(pageIndex => parseInt(pageIndex, 10));
-        // console.log(bookmarks)
 
         const printOutlineTree = (item, level) => {
           const indent = ' '.repeat(level);
@@ -78,44 +71,17 @@ const App = () => {
 
         setBookmarks(bookmarks[0].children);
       });
-
-      // docViewer.getAnnotations().then((annotation) => {
-      //   console.log(annotation);
-      // const pageIndexes = Object.keys(bookmarks).map(pageIndex => parseInt(pageIndex, 10));
-      // console.log(bookmarks)
-
-      // const printOutlineTree = (item, level) => {
-      //   const indent = ' '.repeat(level);
-      //   const name = item.getName();
-      //   console.log(indent + name);
-      //   item.getChildren().map(b => printOutlineTree(b, level + 1));
-      // };
-
-      // bookmarks.map((root) => {
-      //   printOutlineTree(root, 0);
-      // });
-
-      // setBookmarks(bookmarks[0].children);
-      // });
-
-      // debugger;
-      // const highlight = new Annotations.TextHighlightAnnotation();
-      // highlight.PageNumber = 1;
-      // highlight.X = 405;
-      // highlight.Y = 165;
-      // highlight.Width = 275;
-      // highlight.Height = 25;
-      // highlight.StrokeColor = new Annotations.Color(255, 255, 0);
-      // // you might get the quads from text selection, a server calculation, etc
-      // highlight.Quads = [
-      //   { x1: 644, y1: 178, x2: 682, y2: 178, x3: 682, y3: 168, x4: 644, y4: 168 },
-      //   { x1: 408, y1: 190, x2: 458, y2: 190, x3: 458, y3: 180, x4: 408, y4: 180 }
-      // ];
-
-      // annotationManager.addAnnotation(highlight);
-      // annotationManager.drawAnnotations(highlight.PageNumber);
     });
+    // docViewer.addEventListener('annotationAdded', () => console.log(`1`));
   }, []);
+
+  // useEffect(()=>{
+  //   if(docViewer){
+  //     docViewer.addEventListener('annotationAdded',(annotations, action) => {
+  //       console.log(1)
+  //     })
+  //   }
+  // }, [docViewer])
 
   const zoomOut = () => {
     docViewer.zoomTo(docViewer.getZoom() - 0.25);
@@ -145,20 +111,6 @@ const App = () => {
     docViewer.setToolMode(docViewer.getTool(window.Tools.ToolNames.STICKY));
   };
 
-  const selectTool = () => {
-    docViewer.setToolMode(docViewer.getTool('AnnotationEdit'));
-  };
-
-  const createRedaction = () => {
-    docViewer.setToolMode(docViewer.getTool('AnnotationCreateRedaction'));
-  };
-
-  const applyRedactions = async () => {
-    const annotManager = docViewer.getAnnotationManager();
-    annotManager.enableRedaction(true);
-    await annotManager.applyRedactions();
-  };
-
   const pageNavigaton = (e) => {
     e.preventDefault();
     docViewer.setCurrentPage(inputValue)
@@ -178,8 +130,6 @@ const App = () => {
                   ref={pageInput}
                   value={inputValue}
                   onChange={(e) => {
-                    // e.target
-                    console.log()
                     pageInput.current.style.width = `${pageInput.current.value.length}ch`
                     setInputValue(e.target.value)
                   }}
@@ -197,7 +147,6 @@ const App = () => {
               <button onClick={fitMode}>
                 <FullWidth />
               </button>
-
               <button onClick={createHighlight}>
                 <AnnotationRectangle />
               </button>
