@@ -198,12 +198,12 @@ const App = () => {
                 <FullWidth />
               </button>
 
-              {/* <button onClick={createHighlight}>
+              <button onClick={createHighlight}>
                 <AnnotationRectangle />
               </button>
               <button onClick={notesTool}>
                 <AnnotationRectangle />
-              </button> */}
+              </button>
 
               {/*<button onClick={createRedaction}>
             <AnnotationRedact />
