@@ -9,6 +9,8 @@ import logo2 from './assets/images/headerLogo.png';
 import logo1 from './assets/images/logo1.png';
 import { ReactComponent as ZoomIn } from './assets/images/plusCircle.svg';
 import { ReactComponent as ZoomOut } from './assets/images/minusCircle.svg';
+import { ReactComponent as Note } from './assets/images/note.svg';
+import { ReactComponent as Pen } from './assets/images/pen.svg';
 import { ReactComponent as AnnotationRectangle } from './assets/icons/ic_annotation_square_black_24px.svg';
 import { ReactComponent as AnnotationRedact } from './assets/icons/ic_annotation_add_redact_black_24px.svg';
 import { ReactComponent as AnnotationApplyRedact } from './assets/icons/ic_annotation_apply_redact_black_24px.svg';
@@ -51,8 +53,8 @@ const App = () => {
     docViewer.setScrollViewElement(scrollView.current);
     docViewer.setViewerElement(viewer.current);
     docViewer.setOptions({ enableAnnotations: true, enableLeftPanel: ['bookmarksPanel', 'bookmarksPanelButton'] });
-    docViewer.loadDocument('/files/romeo-and-juliet.pdf');
-    // docViewer.loadDocument('/files/duckett.pdf');
+    // docViewer.loadDocument('/files/romeo-and-juliet.pdf');
+    docViewer.loadDocument('/files/duckett.pdf');
 
 
     setDocViewer(docViewer);
@@ -61,7 +63,7 @@ const App = () => {
     docViewer.on('documentLoaded', () => {
       setCurrentPage(docViewer.getCurrentPage())
       setTotalPages(docViewer.getPageCount())
-      pageInput.current.style.width = `${pageInput.current.value.length}ch`
+      // pageInput.current.style.width = `${pageInput.current.value.length}ch`
 
       docViewer.setToolMode(docViewer.getTool('AnnotationEdit'));
 
@@ -90,12 +92,18 @@ const App = () => {
   }, []);
 
   // useEffect(()=>{
+  //   console.log('useEfect of doc')
   //   if(docViewer){
-  //     docViewer.addEventListener('annotationAdded',(annotations, action) => {
-  //       console.log(1)
-  //     })
+  //     // docViewer.addEventListener('annotationAdded',(annotations, action) => {
+  //     //   console.log(1)
+  //     // })
+  //     setCurrentPage(docViewer.getCurrentPage())
   //   }
   // }, [docViewer])
+
+  useEffect(()=>{
+    pageInput.current.style.width = `${pageInput.current.value.length}ch`
+  },[currentPage])
 
   const showBookmarks = (list, level = 0) => {
     const bookmarksFormated = [];
@@ -169,7 +177,7 @@ const App = () => {
                   ref={pageInput}
                   value={currentPage}
                   onChange={(e) => {
-                    pageInput.current.style.width = `${pageInput.current.value.length}ch`
+                    // pageInput.current.style.width = `${pageInput.current.value.length}ch`
                     setCurrentPage(e.target.value)
                   }}
                   onBlur={pageNavigaton}
@@ -230,6 +238,7 @@ const App = () => {
               docViewer={docViewer}
               searchTermRef={searchTerm}
               searchContainerRef={searchContainerRef}
+              updatePage={()=>setCurrentPage(docViewer.getCurrentPage())}
              />
             <div className='bookmarks_container'>
               <div className='main_bookmarks_container'>
@@ -246,7 +255,10 @@ const App = () => {
                       if (marks.end) {
                         return (
                           <li 
-                            onClick={()=>docViewer.setCurrentPage(marks.page)}
+                            onClick={()=>{
+                              docViewer.setCurrentPage(marks.page)
+                              setCurrentPage(marks.page)
+                            }}
                             className='subItem'
                             style={{ marginLeft: `calc(24px * ${marks.level})` }}
                           > 
@@ -256,7 +268,10 @@ const App = () => {
                       } else {
                         return (
                           <div
-                            onClick={()=>docViewer.setCurrentPage(marks.page)}
+                            onClick={()=>{
+                              docViewer.setCurrentPage(marks.page)
+                              setCurrentPage(marks.page)
+                            }}
                             className='bookmarks_subheading'
                             style={{ marginLeft: `calc(24px * ${marks.level})` }}
                           >
@@ -311,7 +326,7 @@ const App = () => {
             />
           </div> */}
           <div id="viewer" ref={viewer}></div>
-          <div className="flexbox-container">
+          {/* <div className="flexbox-container">
             <SearchContainer
               Annotations={Annotations}
               annotManager={annotManager}
@@ -320,10 +335,31 @@ const App = () => {
               searchContainerRef={searchContainerRef}
               open={true}
             />
+          </div> */}
+
+
+          <div className='side_container right'>
+            <Grid container spacing={2} className='bottom_margin'>
+              <Grid item sm={6} xs={12} >
+                <button className='operation_btn' onClick={createHighlight}>
+                  <Pen style={{width:'24px', height:'24px', marginRight:'10px'}} />
+                  Highlight text
+                </button>
+              </Grid>
+              <Grid item sm={6} xs={12} >
+                <button className='operation_btn'>
+                  <Note style={{width:'24px', height:'24px', marginRight:'10px'}} />
+                  Add note
+                </button>
+              </Grid>
+            </Grid>
+            <div className='bookmarks_container'>
+              <div className='main_bookmarks_container'>
+                <div className='bookmarks_heading' onClick={() => setIsContentOpen(!isContentOpen)}>Notes <ArrowDropUpIcon className={`carrot_icon ${!isContentOpen && 'close'}`} /> </div>
+                
+              </div>
+            </div>
           </div>
-
-
-          {/* <div className='side_container right'>abc</div> */}
 
         </div>
       </div>

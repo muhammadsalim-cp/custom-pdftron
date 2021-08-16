@@ -1,0 +1,49 @@
+.search_pdf_input{
+    position: relative;
+    top: 0;
+    left: 0;
+  }
+  
+  .search_pdf_input input{
+    border: 1px solid white;
+    border-radius: 8px;
+    padding: 16px 19px;
+    padding-left: 47px;
+    padding-right: 73px;
+    background-color: transparent;
+    outline: none;
+    box-shadow: none;
+    box-sizing: border-box;
+    font-weight: 400;
+    width: 100%;
+    margin-bottom: 24px;
+  }
+  
+  .search_pdf_input input,.search_pdf_input input::placeholder{
+    font-size: 16px;
+    color: white;
+    
+  }
+  
+  .search_pdf_input input::placeholder{
+    opacity: 0.8;
+  }
+  .search_pdf_input svg{
+    fill: white;
+    width: 17px;
+    height: 17px;
+  }
+  
+  .search_pdf_input svg.search_icon{
+    position: absolute;
+    top: 16px;
+    left:19px;
+   
+  }
+
+  .search_pdf_input .more_search_options{
+    position: absolute;
+    top: 16px;
+    right:19px;
+    cursor: pointer;
+  }

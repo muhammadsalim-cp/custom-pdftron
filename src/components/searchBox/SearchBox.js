@@ -1,14 +1,19 @@
 import React, { useState, useEffect } from 'react';
 import SearchIcon from '@material-ui/icons/Search';
-import ClearSearch from '../../assets/icons/ic_close_black_24px.svg'
-import LeftChevronArrow from '../../assets/icons/ic_chevron_left_black_24px.svg'
-import RightChevronArrow from '../../assets/icons/ic_chevron_right_black_24px.svg'
+import ClearIcon from '@material-ui/icons/Clear';
+import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
+import ExpandLessIcon from '@material-ui/icons/ExpandLess';
+import ClearSearch from '../../assets/icons/ic_close_black_24px.svg';
+import LeftChevronArrow from '../../assets/icons/ic_chevron_left_black_24px.svg';
+import RightChevronArrow from '../../assets/icons/ic_chevron_right_black_24px.svg';
+import './searchBox.css';
 
 export default function SearchBox(props) {
     const [searchResults, setSearchResults] = useState([]);
     const [activeResultIndex, setActiveResultIndex] = useState(-1);
     const [toggledSearchModes, setToggledSearchModes] = useState([]);
     const [searchModes, setSearchModes] = useState({});
+    const [searchValue, setSearchValue] = useState('');
   
     const {
       Annotations,
@@ -17,6 +22,7 @@ export default function SearchBox(props) {
       open = false,
       searchContainerRef,
       searchTermRef: searchTerm,
+      updatePage
     } = props;
   
     const pageRenderTracker = {};
@@ -48,6 +54,7 @@ export default function SearchBox(props) {
     useEffect(() => {
       if (activeResultIndex >= 0 && activeResultIndex < searchResults.length) {
         docViewer.setActiveSearchResult(searchResults[activeResultIndex]);
+        updatePage();
       }
     }, [ activeResultIndex ]);
   
@@ -57,12 +64,17 @@ export default function SearchBox(props) {
      * first result is found.
      */
     const performSearch = () => {
+        // debugger;
       clearSearchResults(false);
-      const {
-        current: {
-          value: textToSearch
-        }
-      } = searchTerm;
+    //   const {
+    //     current: {
+    //       value: searchTerm
+    //     }
+    //   } = searchTerm;
+    //   const textToSearch= {
+    //     value: searchTerm.current.value
+    //   };
+    //   console.log('term',searchValue)
       const {
         ePageStop,
         eHighlight,
@@ -74,7 +86,7 @@ export default function SearchBox(props) {
       );
       const fullSearch = true;
       let jumped = false;
-      docViewer.textSearchInit(textToSearch, mode, {
+      docViewer.textSearchInit(searchValue, mode, {
         fullSearch,
         onResult: result => {
           setSearchResults(prevState => [...prevState, result]);
@@ -126,7 +138,8 @@ export default function SearchBox(props) {
      */
     const clearSearchResults = (clearSearchTermValue = true) => {
       if (clearSearchTermValue) {
-        searchTerm.current.value = '';
+        // searchTerm.current.value = '';
+        setSearchValue('')
       }
       docViewer.clearSearchResults();
       annotManager.deleteAnnotations(annotManager.getAnnotationsList());
@@ -163,6 +176,7 @@ export default function SearchBox(props) {
      * `docViewer.setActiveSearchResult`
      */
     const changeActiveSearchResult = (newSearchResult) => {
+        // debugger;
       /**
        * @todo Figure out why only the middle set of search results can be
        * iterated through, but not the first or last results.
@@ -214,43 +228,50 @@ export default function SearchBox(props) {
       toggleSearchMode(eWholeWord);
     }
 
-    console.log('searched arr', searchResults)
+    // console.log('searched arr', searchResults, activeResultIndex)
 
     return (
         <>
-            <div className='search_pdf_input'>
+            <div className='search_pdf_input' ref={searchContainerRef}>
                 <input
                     // className='search_pdf_input'
                     type='text'
                     placeholder='Search'
                     ref={searchTerm}
+                    value={searchValue}
+                    onChange={e=>setSearchValue(e.target.value)} 
                     onKeyUp={listenForEnter}
-                    onBlur={performSearch}
+                    // onBlur={performSearch}
 
                 />
                 <SearchIcon className='search_icon' />
+                <div className='more_search_options' >
+                    <ClearIcon className='options_icon' onClick={clearSearchResults} />
+                    <ExpandLessIcon className='options_icon' onClick={() => changeActiveSearchResult(activeResultIndex - 1)} />
+                    <ExpandMoreIcon className='options_icon' onClick={() => changeActiveSearchResult(activeResultIndex + 1)} />
+                </div>
             </div>
-            <div id='search-buttons'>
+            {/* <div id='search-buttons' style={{zIndex:22}}>
                 <span>
                     <button onClick={clearSearchResults}>
                         <img src={ClearSearch} alt="Clear Search" />
                     </button>
                 </span>
-                <span id="search-iterators">
+                <span >
                     <button
-                        onClick={() => { changeActiveSearchResult(activeResultIndex - 1); }}
+                        onClick={() => changeActiveSearchResult(activeResultIndex - 1)}
                         disabled={activeResultIndex < 0}
                     >
                         <img src={LeftChevronArrow} alt="Previous Search Result" />
                     </button>
                     <button
-                        onClick={() => { changeActiveSearchResult(activeResultIndex + 1); }}
+                        onClick={() => { console.log('clicked next'); changeActiveSearchResult(activeResultIndex + 1); }}
                         disabled={activeResultIndex < 0}
                     >
                         <img src={RightChevronArrow} alt="Next Search Result" />
                     </button>
                 </span>
-            </div>
+            </div> */}
         </>
     )
 }
