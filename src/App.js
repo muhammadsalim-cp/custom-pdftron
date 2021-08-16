@@ -2,7 +2,7 @@ import React, { useRef, useEffect, useState } from 'react';
 import SearchContainer from './components/SearchContainer';
 // import zoomin from './assets/images/circleMinus.png';
 import { Grid } from '@material-ui/core';
-import SearchIcon from '@material-ui/icons/Search';
+
 import ArrowDropUpIcon from '@material-ui/icons/ArrowDropUp';
 import { ReactComponent as FullWidth } from './assets/images/fullView.svg';
 import logo2 from './assets/images/headerLogo.png';
@@ -14,8 +14,8 @@ import { ReactComponent as AnnotationRedact } from './assets/icons/ic_annotation
 import { ReactComponent as AnnotationApplyRedact } from './assets/icons/ic_annotation_apply_redact_black_24px.svg';
 import { ReactComponent as Search } from './assets/icons/ic_search_black_24px.svg';
 import { ReactComponent as Select } from './assets/icons/ic_select_black_24px.svg';
+import SearchBox from './components/searchBox/SearchBox';
 import './App.css';
-import { NotInterestedTwoTone } from '@material-ui/icons';
 
 var nest = 0;
 
@@ -80,7 +80,7 @@ const App = () => {
         //   printOutlineTree(root, 0);
         // });
 
-        console.log('bookmarks in useEffect', bookmarks)
+        // console.log('bookmarks in useEffect', bookmarks)
         setDisplayBookmarks(showBookmarks(bookmarks))
 
         setBookmarks(bookmarks);
@@ -111,7 +111,7 @@ const App = () => {
         bookmarksFormated.push({ ...last, end: true })
       }
     });
-    console.log('list', bookmarksFormated)
+    // console.log('list', bookmarksFormated)
     return bookmarksFormated;
   }
 
@@ -224,16 +224,13 @@ const App = () => {
 
         <div className="flexbox-container" id="scroll-view" ref={scrollView}>
           <div className='side_container left'>
-            <div className='search_pdf_input'>
-              <input
-                // className='search_pdf_input'
-                type='text'
-                placeholder='Search'
-                value={searchValue}
-                onChange={(e) => { setSearchValue(e.target.value) }}
-              />
-              <SearchIcon className='search_icon' />
-            </div>
+            <SearchBox
+              Annotations={Annotations}
+              annotManager={annotManager}
+              docViewer={docViewer}
+              searchTermRef={searchTerm}
+              searchContainerRef={searchContainerRef}
+             />
             <div className='bookmarks_container'>
               <div className='main_bookmarks_container'>
                 <div className='bookmarks_heading' onClick={() => setIsContentOpen(!isContentOpen)}>Contents <ArrowDropUpIcon className={`carrot_icon ${!isContentOpen && 'close'}`} /> </div>
@@ -314,7 +311,7 @@ const App = () => {
             />
           </div> */}
           <div id="viewer" ref={viewer}></div>
-          {/* <div className="flexbox-container">
+          <div className="flexbox-container">
             <SearchContainer
               Annotations={Annotations}
               annotManager={annotManager}
@@ -323,7 +320,7 @@ const App = () => {
               searchContainerRef={searchContainerRef}
               open={true}
             />
-          </div> */}
+          </div>
 
 
           {/* <div className='side_container right'>abc</div> */}
