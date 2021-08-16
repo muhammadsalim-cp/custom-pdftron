@@ -12,6 +12,7 @@ import { ReactComponent as AnnotationApplyRedact } from './assets/icons/ic_annot
 import { ReactComponent as Search } from './assets/icons/ic_search_black_24px.svg';
 import { ReactComponent as Select } from './assets/icons/ic_select_black_24px.svg';
 import './App.css';
+import {getInstance} from "@pdftron/webviewer"
 
 const App = () => {
   const viewer = useRef(null);
@@ -28,6 +29,7 @@ const App = () => {
   const [docViewer, setDocViewer] = useState(null);
   const [annotManager, setAnnotManager] = useState(null);
   const [searchContainerOpen, setSearchContainerOpen] = useState(false);
+  const [notesText, setNotesText] = useState("");
 
   const Annotations = window.Annotations;
 
@@ -48,14 +50,15 @@ const App = () => {
     pageInput.current.style.width = `${pageInput.current.value.length}ch`
 
     docViewer.on('documentLoaded', () => {
+      let annotationManager = docViewer.getAnnotationManager()
+
       setInputValue(docViewer.getCurrentPage())
       setTotalPages(docViewer.getPageCount())
+      docViewer.setToolMode(docViewer.getTool('AnnotationEdit'))
+      setAnnotManager(annotationManager);
       pageInput.current.style.width = `${pageInput.current.value.length}ch`
 
-      docViewer.setToolMode(docViewer.getTool('AnnotationEdit'));
-
-      setAnnotManager(docViewer.getAnnotationManager());
-
+      // CREATING BOOKMARKS LIST
       docViewer.getDocument().getBookmarks().then((bookmarks) => {
 
         const printOutlineTree = (item, level) => {
@@ -71,8 +74,12 @@ const App = () => {
 
         setBookmarks(bookmarks[0].children);
       });
+
+      docViewer.addEventListener(CoreControls.AnnotationManager.Events.ANNOTATION_SELECTED, () => console.log("Annotation Selected"));
+
     });
-    // docViewer.addEventListener('annotationAdded', () => console.log(`1`));
+    // console.log("Instance", getInstance(document.getElementById("viewer")))
+    // CoreControls.UI.addEventListener(CoreControls.UI.Events.VIEWER_LOADED, () => {console.log("load hugya")})
   }, []);
 
   // useEffect(()=>{
@@ -175,7 +182,9 @@ const App = () => {
 
             </div>
           </Grid>
-          <Grid item xs={3}></Grid>
+          <Grid item xs={3}>
+          <input value={notesText} onChange={(e)=> setNotesText(e.target.value)} />
+          </Grid>
         </Grid>
 
 
