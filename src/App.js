@@ -18,7 +18,6 @@ const App = () => {
   const searchTerm = useRef(null);
   const searchContainerRef = useRef(null);
   const pageInput = useRef(null);
-  // const [bookmarks, setBookmarks] = useState([]);
   const [displayBookmarks, setDisplayBookmarks] = useState([]);
   const [currentPage, setCurrentPage] = useState('');
   const [totalPages, setTotalPages] = useState('');
@@ -67,8 +66,6 @@ const App = () => {
       })
 
       docViewer.setToolMode(docViewer.getTool('AnnotationEdit'));
-      //uncomment
-      // pageInput.current.style.width = `${pageInput.current.value.length}ch`
 
       // CREATING BOOKMARKS LIST
       docViewer.getDocument().getBookmarks().then((bookmarks) => {
