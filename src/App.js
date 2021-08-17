@@ -67,8 +67,8 @@ const App = () => {
       })
 
       docViewer.setToolMode(docViewer.getTool('AnnotationEdit'));
-
-      pageInput.current.style.width = `${pageInput.current.value.length}ch`
+      //uncomment
+      // pageInput.current.style.width = `${pageInput.current.value.length}ch`
 
       // CREATING BOOKMARKS LIST
       docViewer.getDocument().getBookmarks().then((bookmarks) => {
@@ -139,9 +139,128 @@ const App = () => {
   }
 
   return (
-    <div className="App">
-      <div id="main-column">
-        <Grid container alignItems='center' className='custom_header'>
+    // <div className="App">
+
+    //   <div id="main-column">
+        // <Grid container alignItems='center' className='custom_header'>
+        //   <Grid item md={3} xs={6} className='left_header'>
+        //     <div className='book_info'>
+        //       <img className='book_thumbnail' src={logo1} alt='logo1' />
+        //       <div className='book_name'>Signaalanalyse</div>
+        //     </div>
+        //   </Grid>
+        //   <Grid item md={6} xs={12} className='operations_header'>
+        //     <div id="tools">
+        //       <form onSubmit={pageNavigaton} onBlur={pageNavigaton}>
+        //         <span>Page: </span>
+        //         <input
+        //           className='current_page_input'
+        //           ref={pageInput}
+        //           value={currentPage}
+        //           onChange={(e) => {
+        //             setCurrentPage(e.target.value)
+        //           }}
+        //           onBlur={pageNavigaton}
+        //         /> / <span>{totalPages}</span>
+        //       </form>
+        //       <div className='zoom_buttons'>
+        //         <button onClick={zoomIn}>
+        //           <ZoomIn />
+        //         </button>
+        //         <button onClick={zoomOut}>
+        //           <ZoomOut />
+        //         </button>
+        //       </div>
+        //       <button onClick={fitMode}>
+        //         <FullWidth />
+        //       </button>
+
+        //     </div>
+        //   </Grid>
+        //   <Grid item md={3} xs={6} className='right_header'>
+        //     <div>
+        //       <img className='pdf_logo' src={logo2} alt='logo1' />
+        //     </div>
+        //   </Grid>
+        // </Grid>
+
+    //     <div className="flexbox-container" id="scroll-view" ref={scrollView}>
+    //       <div className='side_container left'>
+            // <SearchBox
+            //   Annotations={Annotations}
+            //   annotManager={annotManager}
+            //   docViewer={docViewer}
+            //   searchTermRef={searchTerm}
+            //   searchContainerRef={searchContainerRef}
+            //   updatePage={()=>setCurrentPage(docViewer.getCurrentPage())}
+            //  />
+            // <div className='bookmarks_container'>
+            //   <div className='main_bookmarks_container'>
+            //     <div className='bookmarks_heading' onClick={() => setIsContentOpen(!isContentOpen)}>Contents <ArrowDropUpIcon className={`carrot_icon ${!isContentOpen && 'close'}`} /> </div>
+            //     {
+            //       isContentOpen &&
+            //       <>
+            //         {displayBookmarks.map(marks => {
+            //           if (marks.end) {
+            //             return (
+            //               <li 
+            //                 onClick={()=>{
+            //                   docViewer.displayBookmark(marks.obj);
+            //                 }}
+            //                 className='subItem'
+            //                 style={{ marginLeft: `calc(24px * ${marks.level})` }}
+            //               > 
+            //                 {marks.name} 
+            //               </li>
+            //             );
+            //           } else {
+            //             return (
+            //               <div
+            //                 onClick={()=>{
+            //                   docViewer.displayBookmark(marks.obj);
+            //                 }}
+            //                 className='bookmarks_subheading'
+            //                 style={{ marginLeft: `calc(24px * ${marks.level})` }}
+            //               >
+            //                 {marks.name}
+            //               </div>
+            //             );
+            //           }
+            //         })}
+            //       </>
+            //     }
+            //   </div>
+            // </div>
+    //       </div>
+    //       <div id="viewer" ref={viewer}></div>
+
+    //       <div className='side_container right'>
+            // <Grid container spacing={2} className='bottom_margin'>
+            //   <Grid item sm={6} xs={12} >
+            //     <button className='operation_btn' onClick={createHighlight}>
+            //       <Pen style={{width:'24px', height:'24px', marginRight:'10px'}} />
+            //       Highlight text
+            //     </button>
+            //   </Grid>
+            //   <Grid item sm={6} xs={12} >
+            //     <button className='operation_btn' onClick={notesTool}>
+            //       <Note style={{width:'24px', height:'24px', marginRight:'10px'}} />
+            //       Add note
+            //     </button>
+            //   </Grid>
+            // </Grid>
+            // <div className='bookmarks_container'>
+            //   <div className='main_bookmarks_container'>
+            //     <div className='bookmarks_heading' onClick={() => setIsContentOpen(!isContentOpen)}>Notes <ArrowDropUpIcon className={`carrot_icon ${!isContentOpen && 'close'}`} /> </div>
+            //   </div>
+            // </div>
+    //       </div>
+    //     </div>
+    //   </div>
+    // </div>
+    <div className='pdf' >
+      <div className='pdf_header_section'>
+        <Grid container alignItems='center' className='pdf_header_container'>
           <Grid item md={3} xs={6} className='left_header'>
             <div className='book_info'>
               <img className='book_thumbnail' src={logo1} alt='logo1' />
@@ -150,7 +269,7 @@ const App = () => {
           </Grid>
           <Grid item md={6} xs={12} className='operations_header'>
             <div id="tools">
-              <form onSubmit={pageNavigaton} onBlur={pageNavigaton}>
+              <form className='page_operation' onSubmit={pageNavigaton} onBlur={pageNavigaton}>
                 <span>Page: </span>
                 <input
                   className='current_page_input'
@@ -160,7 +279,7 @@ const App = () => {
                     setCurrentPage(e.target.value)
                   }}
                   onBlur={pageNavigaton}
-                /> / <span>{totalPages}</span>
+                /> / <span style={{color:'#606165'}}>{totalPages}</span>
               </form>
               <div className='zoom_buttons'>
                 <button onClick={zoomIn}>
@@ -182,9 +301,9 @@ const App = () => {
             </div>
           </Grid>
         </Grid>
-
-        <div className="flexbox-container" id="scroll-view" ref={scrollView}>
-          <div className='side_container left'>
+      </div>
+      <div className='pdf_body'>
+        <div className='pdf_side_container pdf_left'>
             <SearchBox
               Annotations={Annotations}
               annotManager={annotManager}
@@ -230,20 +349,21 @@ const App = () => {
                 }
               </div>
             </div>
-          </div>
+        </div>
+        <div className='pdf_main' ref={scrollView} >
           <div id="viewer" ref={viewer}></div>
-
-          <div className='side_container right'>
+        </div>
+        <div className='pdf_side_container pdf_right'>
             <Grid container spacing={2} className='bottom_margin'>
-              <Grid item sm={6} xs={12} >
+              <Grid item md={6} sm={12} xs={12} >
                 <button className='operation_btn' onClick={createHighlight}>
-                  <Pen style={{width:'24px', height:'24px', marginRight:'10px'}} />
+                  <Pen style={{width:'1.5rem', height:'1.5rem', paddingRight:'0.625rem'}} />
                   Highlight text
                 </button>
               </Grid>
-              <Grid item sm={6} xs={12} >
+              <Grid item md={6} sm={12} xs={12} >
                 <button className='operation_btn' onClick={notesTool}>
-                  <Note style={{width:'24px', height:'24px', marginRight:'10px'}} />
+                  <Note style={{width:'1.5rem', height:'1.5rem', paddingRight:'0.625rem'}} />
                   Add note
                 </button>
               </Grid>
@@ -251,10 +371,8 @@ const App = () => {
             <div className='bookmarks_container'>
               <div className='main_bookmarks_container'>
                 <div className='bookmarks_heading' onClick={() => setIsContentOpen(!isContentOpen)}>Notes <ArrowDropUpIcon className={`carrot_icon ${!isContentOpen && 'close'}`} /> </div>
-                
               </div>
             </div>
-          </div>
         </div>
       </div>
     </div>

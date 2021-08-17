@@ -72,8 +72,10 @@
 }
 
 .zoom_buttons{
-  margin-right: 3rem;
-  margin-left: 2rem;
+  /* margin-right: 3rem;
+  margin-left: 2rem; */
+  width: 20%;
+  text-align: center;
 }
 
 #tools button:hover {
@@ -112,46 +114,41 @@
   right: 0;
 }
 
-
 .custom_header{
-  box-shadow: 0px 4px 8px 4px rgba(0, 13, 27, 0.06);
   position: fixed;
   z-index: 99999;
+  box-shadow: 0px 4px 8px 4px rgba(0, 13, 27, 0.06);
   background-color: #FBFBFB;
   padding: 0 14px;
-  /* max-height: 10vh; */
   max-height: 10vh;
   min-height: 112px;
 }
-
-.operations_header{
-  /* max-height: 10vh; */
+.page_operation{
+  font-size: 1.125rem;
+  font-weight: 400;
+  color: #3B3C44;
 }
 
 .current_page_input{
-  padding: 5px 10px;
+  padding: 0.3125rem 0.625rem;
   border: 1px solid #9BC1E9;
   background-color: #FBFBFB;
   border-radius: 4px;
   outline: none;
   box-shadow: none;
-}
-
-.left_header, .right_header{
-  padding: 14px;
-
+  font-size: 1.125rem;
+  font-weight: 400;
+  color: #3B3C44;
 }
 
 .right_header{
-  display: flex;
-  justify-content: flex-end;
-  align-items: center;
+  text-align: right;
 }
 
 .book_thumbnail{
-  /* width: 64px; */
-  /* height: 9vh; */
-  margin-right: 16px;
+  width: 4rem;
+  height: 5rem;
+  margin-right: 1rem;
 }
 .book_name{
 font-size: 18px;
@@ -163,14 +160,16 @@ font-size: 18px;
 .pdf_logo{
   /* width: 106px;
   height: 72px; */
+  height: 4.5rem;
+  width: 6.625rem;
   /* height: 9vh; */
 }
 
 
 
 .bookmarks_container{
-  padding: 24px;
-  padding-right: 8px;
+  padding: 1.5rem;
+  padding-right: 0.5rem;
   background-color: white;
   border-radius: 8px;
   height: 37vh;
@@ -185,7 +184,7 @@ font-size: 18px;
   height: 100%;
   /* overflow-x: hidden; */
   overflow: auto;
-  padding-right: 16px;
+  padding-right: 1rem;
  
 }
 .main_bookmarks_container::-webkit-scrollbar{
@@ -193,20 +192,34 @@ font-size: 18px;
   height: 4px;
 }
 
-.main_bookmarks_container::-webkit-scrollbar-track {
+.main_bookmarks_container::-webkit-scrollbar-track{
    background-color: #DADADA;
 }
  
-.main_bookmarks_container::-webkit-scrollbar-thumb {
+.main_bookmarks_container::-webkit-scrollbar-thumb{
   background-color: #5F20AF;
   border-radius: 50px;
 }
 
+/* .pdf_main::-webkit-scrollbar{
+  width: 0px;
+  height: 4px;
+} */
+
+/* .pdf_main::-webkit-scrollbar-track {
+   background-color: #DADADA;
+}
+ 
+.pdf_main::-webkit-scrollbar-thumb {
+  background-color: #5F20AF;
+  border-radius: 50px;
+} */
+
 .main_bookmarks_container .bookmarks_heading{
-  font-size: 18px;
+  font-size: 1.125rem;
   font-weight: 500;
   color: #3B3C44;
-  padding-bottom: 13px;
+  padding-bottom: 0.8125rem;
   /* margin-bottom: 12px; */
   border-bottom: 1px solid #9BC1E9;
   display: flex;
@@ -221,39 +234,31 @@ font-size: 18px;
 }
 
 .main_bookmarks_container .bookmarks_subheading{
-  font-size: 18px;
+  font-size: 1.125rem;
   font-weight: 400;
   color: #3B3C44;
-  padding: 12px 0px;
+  padding: 0.75rem 0px;
   cursor: pointer;
 }
 .main_bookmarks_container .bookmarks_subheading.nested_subheading{
-  padding-bottom: 12px;
+  padding-bottom: 0.75rem;
   
 }
 
-/* .main_bookmarks_container ul.subItem_container{
-  margin: 0;
-  color: #929196;
-  font-size: 16px;
-  font-weight: 400;
-  cursor: pointer;
-} */
-
 .main_bookmarks_container li.subItem:last-child{
-  margin-bottom: 24px;
+  margin-bottom: 1.5rem;
 }
 
 .main_bookmarks_container li.subItem{
-  margin-bottom: 12px;
+  margin-bottom: 0.75rem;
   color: #929196;
-  font-size: 16px;
+  font-size: 1rem;
   font-weight: 400;
   cursor: pointer;
 }
 
 .bottom_margin{
-  margin-bottom: 24px !important;
+  margin-bottom: 1.5rem !important;
 }
 
 .operation_btn{
@@ -261,11 +266,11 @@ font-size: 18px;
   outline: none;
   background-color: white;
   border-radius: 8px;
-  padding: 14px 22px;
+  padding: 0.875rem 1.375rem;
   text-align: left;
   display: flex;
   align-items: center;
-  font-size: 18px;
+  font-size: 1.125rem;
   font-weight: 400;
   color: #3B3C44;
   border: none;
@@ -284,4 +289,94 @@ font-size: 18px;
     margin-top: 160px;
     height: calc(100% - 160px);
   }
+  .zoom_buttons{
+    width: 39%;
+  }
 }
+
+
+
+/*************************** new styles **************************/
+.pdf{
+  height: 100%;
+  max-height: 100%;
+  background-color: grey;
+  display: flex;
+  flex-direction: column;
+}
+
+.pdf_header_section{
+  padding: 1rem 3rem;
+  z-index: 99999;
+  box-shadow: 0px 4px 8px 4px rgba(0, 13, 27, 0.06);
+  background-color: #FBFBFB;
+}
+
+.pdf_right_header{
+  text-align: right;
+}
+
+
+.pdf_body{
+  /* height: 90%; */
+  flex: 1;
+  background-color: #606165;
+  /* overflow: scroll; */
+  overflow: hidden;
+
+  display: flex;
+  flex-direction: row;
+
+
+}
+
+.pdf_left{
+  flex: 1;
+
+  /*after bp */
+  /* position: fixed;
+  top: 0;
+  left: 0;
+  height: 100%;
+  max-height: 100%;
+  width: 300px; */
+}
+
+.pdf_main{
+  overflow: auto;
+  /* overflow-y: hidden; */
+  flex: 3;
+}
+
+.pdf_main::-webkit-scrollbar{
+  width: 0;
+
+}
+
+.pdf_main::-webkit-scrollbar-track{
+  -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3); 
+  box-shadow: inset 0 0 6px rgba(0,0,0,0.3); 
+  background-color: #e4e4e4;
+}
+
+.pdf_main::-webkit-scrollbar-thumb{
+  background-color: #606165;
+  -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.5); 
+  box-shadow: inset 0 0 6px rgba(0,0,0,0.5); 
+}
+
+.content{
+  height: 500px;
+  width: 100%;
+}
+
+.pdf_right{
+  flex: 1;
+}
+
+.pdf_side_container{
+  padding: 2.5rem;
+  padding-top: 1.5rem;
+  box-sizing: border-box;
+}
+

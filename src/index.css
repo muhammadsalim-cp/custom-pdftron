@@ -27,3 +27,15 @@ html, body, #root {
   margin: 16px 0;
   border-top: 1px solid var(--divider);
 }
+
+@media only screen and (max-width: 1440px) {
+  html {
+    font-size: 14px;
+  }
+}
+@media only screen and (max-width: 1280px) {
+  html {
+    font-size: 11px;
+  }
+}
+
