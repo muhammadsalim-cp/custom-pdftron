@@ -3,9 +3,6 @@ import SearchIcon from "@material-ui/icons/Search";
 import ClearIcon from "@material-ui/icons/Clear";
 import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
 import ExpandLessIcon from "@material-ui/icons/ExpandLess";
-import ClearSearch from "../../assets/icons/ic_close_black_24px.svg";
-import LeftChevronArrow from "../../assets/icons/ic_chevron_left_black_24px.svg";
-import RightChevronArrow from "../../assets/icons/ic_chevron_right_black_24px.svg";
 import "./searchBox.css";
 
 export default function SearchBox(props) {
@@ -19,13 +16,11 @@ export default function SearchBox(props) {
     Annotations,
     annotManager,
     docViewer,
-    open = false,
     searchContainerRef,
     searchTermRef: searchTerm,
     updatePage,
   } = props;
 
-  const pageRenderTracker = {};
 
   useEffect(() => {
     if (docViewer && docViewer.SearchMode) {
@@ -64,17 +59,7 @@ export default function SearchBox(props) {
    * first result is found.
    */
   const performSearch = () => {
-    // debugger;
     clearSearchResults(false);
-    //   const {
-    //     current: {
-    //       value: searchTerm
-    //     }
-    //   } = searchTerm;
-    //   const textToSearch= {
-    //     value: searchTerm.current.value
-    //   };
-    //   console.log('term',searchValue)
     const { ePageStop, eHighlight, eAmbientString } = searchModes;
     const mode = toggledSearchModes.reduce(
       (prev, value) => prev | value,
@@ -185,42 +170,6 @@ export default function SearchBox(props) {
     }
   };
 
-  /**
-   * Toggles the given `searchMode` value within `toggledSearchModes`
-   *
-   * @param {CoreControls.DocumentViewer.SearchMode} searchMode The bitwise
-   * search mode value to toggle on or off
-   */
-  const toggleSearchMode = (searchMode) => {
-    if (!toggledSearchModes.includes(searchMode)) {
-      setToggledSearchModes((prevState) => [...prevState, searchMode]);
-    } else {
-      setToggledSearchModes((prevState) =>
-        prevState.filter((value) => value !== searchMode)
-      );
-    }
-  };
-
-  /**
-   * Side-effect function that toggles whether or not to perform a text search
-   * with case sensitivty
-   */
-  const toggleCaseSensitive = () => {
-    const { eCaseSensitive } = searchModes;
-    toggleSearchMode(eCaseSensitive);
-  };
-
-  /**
-   * Side-effect function that toggles whether or not to perform a text search
-   * that finds the whole word
-   */
-  const toggleWholeWord = () => {
-    const { eWholeWord } = searchModes;
-    toggleSearchMode(eWholeWord);
-  };
-
-  // console.log('searched arr', searchResults, activeResultIndex)
-
   return (
     <>
       <div className="search_pdf_input" ref={searchContainerRef}>
@@ -232,7 +181,6 @@ export default function SearchBox(props) {
           value={searchValue}
           onChange={(e) => setSearchValue(e.target.value)}
           onKeyUp={listenForEnter}
-          // onBlur={performSearch}
         />
         <SearchIcon className="search_icon" />
         <div className="more_search_options">
@@ -247,27 +195,6 @@ export default function SearchBox(props) {
           />
         </div>
       </div>
-      {/* <div id='search-buttons' style={{zIndex:22}}>
-                <span>
-                    <button onClick={clearSearchResults}>
-                        <img src={ClearSearch} alt="Clear Search" />
-                    </button>
-                </span>
-                <span >
-                    <button
-                        onClick={() => changeActiveSearchResult(activeResultIndex - 1)}
-                        disabled={activeResultIndex < 0}
-                    >
-                        <img src={LeftChevronArrow} alt="Previous Search Result" />
-                    </button>
-                    <button
-                        onClick={() => { console.log('clicked next'); changeActiveSearchResult(activeResultIndex + 1); }}
-                        disabled={activeResultIndex < 0}
-                    >
-                        <img src={RightChevronArrow} alt="Next Search Result" />
-                    </button>
-                </span>
-            </div> */}
     </>
   );
 }

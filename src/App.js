@@ -1,8 +1,5 @@
 import React, { useRef, useEffect, useState } from 'react';
-import SearchContainer from './components/SearchContainer';
-// import zoomin from './assets/images/circleMinus.png';
 import { Grid } from '@material-ui/core';
-
 import ArrowDropUpIcon from '@material-ui/icons/ArrowDropUp';
 import { ReactComponent as FullWidth } from './assets/images/fullView.svg';
 import logo2 from './assets/images/headerLogo.png';
@@ -11,16 +8,9 @@ import { ReactComponent as ZoomIn } from './assets/images/plusCircle.svg';
 import { ReactComponent as ZoomOut } from './assets/images/minusCircle.svg';
 import { ReactComponent as Note } from './assets/images/note.svg';
 import { ReactComponent as Pen } from './assets/images/pen.svg';
-import { ReactComponent as AnnotationRectangle } from './assets/icons/ic_annotation_square_black_24px.svg';
-import { ReactComponent as AnnotationRedact } from './assets/icons/ic_annotation_add_redact_black_24px.svg';
-import { ReactComponent as AnnotationApplyRedact } from './assets/icons/ic_annotation_apply_redact_black_24px.svg';
-import { ReactComponent as Search } from './assets/icons/ic_search_black_24px.svg';
-import { ReactComponent as Select } from './assets/icons/ic_select_black_24px.svg';
 import SearchBox from './components/searchBox/SearchBox';
 import './App.css';
 import {getInstance} from "@pdftron/webviewer"
-
-var nest = 0;
 
 const App = () => {
   const viewer = useRef(null);
@@ -31,7 +21,6 @@ const App = () => {
   // const [bookmarks, setBookmarks] = useState([]);
   const [displayBookmarks, setDisplayBookmarks] = useState([]);
   const [currentPage, setCurrentPage] = useState('');
-  const [searchValue, setSearchValue] = useState('');
   const [totalPages, setTotalPages] = useState('');
   const [highlighToolSelected, setHighlightToolSelected] = useState(false);
   const [fitWidth, setFitWidth] = useState(false);
@@ -39,7 +28,6 @@ const App = () => {
 
   const [docViewer, setDocViewer] = useState(null);
   const [annotManager, setAnnotManager] = useState(null);
-  const [searchContainerOpen, setSearchContainerOpen] = useState(false);
   const [stickyAnnotations, setStickyAnnotations] = useState([]);
 
   const Annotations = window.Annotations;
@@ -55,8 +43,8 @@ const App = () => {
     docViewer.setScrollViewElement(scrollView.current);
     docViewer.setViewerElement(viewer.current);
     docViewer.setOptions({ enableAnnotations: true, enableLeftPanel: ['bookmarksPanel', 'bookmarksPanelButton'] });
-    // docViewer.loadDocument('/files/romeo-and-juliet.pdf');
-    docViewer.loadDocument('/files/duckett.pdf');
+    docViewer.loadDocument('/files/romeo-and-juliet.pdf');
+    // docViewer.loadDocument('/files/duckett.pdf');
 
 
     setDocViewer(docViewer);
@@ -69,13 +57,13 @@ const App = () => {
       setAnnotManager(am);
       
       am.on('annotationsDrawn', (annots) => {
-        console.log('annotation drawn');
-        console.log(annots);
-        console.log("Annotation List : ", am.getAnnotationsList())
+        // console.log('annotation drawn');
+        // console.log(annots);
+        // console.log("Annotation List : ", am.getAnnotationsList())
       })
       am.on('annotationSelected', (annotationList, action) => {
-        console.log('annotation Selected');
-        console.log(annotationList);
+        // console.log('annotation Selected');
+        // console.log(annotationList);
       })
 
       docViewer.setToolMode(docViewer.getTool('AnnotationEdit'));
@@ -93,18 +81,9 @@ const App = () => {
       setCurrentPage(page)
     })
 
-    console.log(window.WebViewer)
+    // console.log(window.WebViewer)
 
   }, []);
-
-  // useEffect(()=>{
-  //   if(annotManager){
-  //     annotManager.on('ANNOTATION_SELECTED', (annots) => {
-  //       console.log('This is the selected annotation');
-  //       console.log(annots);
-  //     })
-  //   }
-  // },[annotManager])
 
   useEffect(()=>{
     pageInput.current.style.width = `${pageInput.current.value.length}ch`
@@ -139,7 +118,6 @@ const App = () => {
     if (fitWidth) {
       docViewer.setFitMode(docViewer.FitMode.FitPage)
     } else {
-      // docViewer.setFitMode(docViewer.FitMode.FitPage)
       docViewer.setFitMode(docViewer.FitMode.FitWidth)
     }
     setFitWidth(!fitWidth)
@@ -160,8 +138,6 @@ const App = () => {
     docViewer.setCurrentPage(currentPage)
   }
 
-
-
   return (
     <div className="App">
       <div id="main-column">
@@ -181,7 +157,6 @@ const App = () => {
                   ref={pageInput}
                   value={currentPage}
                   onChange={(e) => {
-                    // pageInput.current.style.width = `${pageInput.current.value.length}ch`
                     setCurrentPage(e.target.value)
                   }}
                   onBlur={pageNavigaton}
@@ -198,32 +173,6 @@ const App = () => {
               <button onClick={fitMode}>
                 <FullWidth />
               </button>
-
-              {/* <button onClick={createHighlight}>
-                <AnnotationRectangle />
-              </button>
-              <button onClick={notesTool}>
-                <AnnotationRectangle />
-              </button> */}
-
-              {/*<button onClick={createRedaction}>
-            <AnnotationRedact />
-          </button>
-          <button onClick={applyRedactions}>
-            <AnnotationApplyRedact />
-          </button>
-          <button onClick={selectTool}>
-            <Select />
-          </button> */}
-
-              {/* <button
-                onClick={() => {
-                  // Flip the boolean
-                  setSearchContainerOpen(prevState => !prevState);
-                }}
-              >
-                <Search />
-              </button> */}
 
             </div>
           </Grid>
@@ -250,18 +199,11 @@ const App = () => {
                 {
                   isContentOpen &&
                   <>
-                    {/* {console.log('return',showBookmarks(bookmarks))} */}
-                    {/* <ShowBookmarks items={bookmarks} /> */}
-
-                    {/* {bookmarks.map(bookmark=>showBookmarks(bookmark))} */}
-
                     {displayBookmarks.map(marks => {
                       if (marks.end) {
                         return (
                           <li 
                             onClick={()=>{
-                              // docViewer.setCurrentPage(marks.page)
-                              // setCurrentPage(marks.page)
                               docViewer.displayBookmark(marks.obj);
                             }}
                             className='subItem'
@@ -274,8 +216,6 @@ const App = () => {
                         return (
                           <div
                             onClick={()=>{
-                              // docViewer.setCurrentPage(marks.page)
-                              // setCurrentPage(marks.page)
                               docViewer.displayBookmark(marks.obj);
                             }}
                             className='bookmarks_subheading'
@@ -286,63 +226,12 @@ const App = () => {
                         );
                       }
                     })}
-
-
-                    {/* <div className='bookmarks_subheading'>Chapter 1. Esssentials</div>
-                    <div className='bookmarks_subheading'>Chapter 2. Intro to new Science</div>
-                    <div className='bookmarks_subheading'>Chapter 3. Time and space</div>
-                    <div className='bookmarks_subheading nested_subheading'>Chapter 4. Main laws</div>
-                    <ul className='subItem_container'>
-                      <li className='subItem'>Chapter 4. 1. The first mention</li>
-                      <li className='subItem'>Chapter 4. 2. Hypotheses</li>
-                      <li className='subItem'>Chapter 4. 3. Hypotheses</li>
-                    </ul>
-                    <div className='bookmarks_subheading'>Chapter 1. Esssentials</div>
-                    <div className='bookmarks_subheading'>Chapter 1. Esssentials</div>
-                    <div className='bookmarks_subheading'>Chapter 1. Esssentials</div>
-                    <div className='bookmarks_subheading'>Chapter 5. Conclusion</div>
-                    <div className='bookmarks_subheading'>Chapter 6. Esssentials 2</div> */}
-
-
                   </>
                 }
               </div>
             </div>
           </div>
-          {/* <div>
-            <ul>
-              {bookmarks.map(b => {
-                console.log(b);
-                return (
-                  <li onClick={() => {
-                    docViewer.setCurrentPage(b.Ac + 1)
-                  }}>{b.name}</li>
-                )
-              })}
-            </ul>
-          </div> */}
-          {/* <div className="flexbox-container">
-            <SearchContainer
-              Annotations={Annotations}
-              annotManager={annotManager}
-              docViewer={docViewer}
-              searchTermRef={searchTerm}
-              searchContainerRef={searchContainerRef}
-              open={true}
-            />
-          </div> */}
           <div id="viewer" ref={viewer}></div>
-          {/* <div className="flexbox-container">
-            <SearchContainer
-              Annotations={Annotations}
-              annotManager={annotManager}
-              docViewer={docViewer}
-              searchTermRef={searchTerm}
-              searchContainerRef={searchContainerRef}
-              open={true}
-            />
-          </div> */}
-
 
           <div className='side_container right'>
             <Grid container spacing={2} className='bottom_margin'>
@@ -366,10 +255,8 @@ const App = () => {
               </div>
             </div>
           </div>
-
         </div>
       </div>
-
     </div>
   );
 };
