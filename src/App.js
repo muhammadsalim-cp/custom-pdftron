@@ -251,7 +251,7 @@ const App = () => {
                       if (marks.end) {
                         return (
                           <li 
-                            onClick={()=>docViewer.setCurrentPage(marks.page)}
+                            onClick={()=>docViewer.displayBookmark(marks.obj)}
                             className='subItem'
                             style={{ marginLeft: `calc(24px * ${marks.level})` }}
                           > 
@@ -261,7 +261,7 @@ const App = () => {
                       } else {
                         return (
                           <div
-                            onClick={()=>docViewer.setCurrentPage(marks.page)}
+                            onClick={()=>docViewer.displayBookmark(marks.obj)}
                             className='bookmarks_subheading'
                             style={{ marginLeft: `calc(24px * ${marks.level})` }}
                           >
