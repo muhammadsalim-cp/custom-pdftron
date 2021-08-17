@@ -27,7 +27,7 @@ const App = () => {
   const searchTerm = useRef(null);
   const searchContainerRef = useRef(null);
   const pageInput = useRef(null);
-  const [bookmarks, setBookmarks] = useState([]);
+  // const [bookmarks, setBookmarks] = useState([]);
   const [displayBookmarks, setDisplayBookmarks] = useState([]);
   const [currentPage, setCurrentPage] = useState('');
   const [searchValue, setSearchValue] = useState('');
@@ -39,6 +39,7 @@ const App = () => {
   const [docViewer, setDocViewer] = useState(null);
   const [annotManager, setAnnotManager] = useState(null);
   const [searchContainerOpen, setSearchContainerOpen] = useState(false);
+  // const
 
   const Annotations = window.Annotations;
 
@@ -53,14 +54,14 @@ const App = () => {
     docViewer.setScrollViewElement(scrollView.current);
     docViewer.setViewerElement(viewer.current);
     docViewer.setOptions({ enableAnnotations: true, enableLeftPanel: ['bookmarksPanel', 'bookmarksPanelButton'] });
-    // docViewer.loadDocument('/files/romeo-and-juliet.pdf');
-    docViewer.loadDocument('/files/duckett.pdf');
+    docViewer.loadDocument('/files/romeo-and-juliet.pdf');
+    // docViewer.loadDocument('/files/duckett.pdf');
 
 
     setDocViewer(docViewer);
     pageInput.current.style.width = `${pageInput.current.value.length}ch`
 
-    docViewer.on('documentLoaded', () => {
+    docViewer.on('documentLoaded', async() => {
       setCurrentPage(docViewer.getCurrentPage())
       setTotalPages(docViewer.getPageCount())
       // pageInput.current.style.width = `${pageInput.current.value.length}ch`
@@ -70,23 +71,18 @@ const App = () => {
       setAnnotManager(docViewer.getAnnotationManager());
 
       docViewer.getDocument().getBookmarks().then((bookmarks) => {
-
-        // const printOutlineTree = (item, level) => {
-        //   const indent = ' '.repeat(level);
-        //   const name = item.getName();
-        //   console.log(indent + name);
-        //   item.getChildren().map(b => printOutlineTree(b, level + 1));
-        // };
-
-        // bookmarks.map((root) => {
-        //   printOutlineTree(root, 0);
-        // });
-
-        // console.log('bookmarks in useEffect', bookmarks)
-        setDisplayBookmarks(showBookmarks(bookmarks))
-
-        setBookmarks(bookmarks);
+        const formatedBookmarks=showBookmarks(bookmarks)
+        console.log('formatted bm',  formatedBookmarks)
+        setDisplayBookmarks(formatedBookmarks)
+        // setBookmarks(bookmarks);
       });
+
+      const bookmarks = await docViewer.getDocument().getBookmarks();
+      console.log('check bm',  bookmarks[0])
+      const williamShakespeareBookmark = bookmarks[0].children[0];
+      console.log('check ws', williamShakespeareBookmark)
+      docViewer.displayBookmark(williamShakespeareBookmark);
+      // docViewer.displayBookmark(bookmarks);
     });
     // docViewer.addEventListener('annotationAdded', () => console.log(`1`));
   }, []);
@@ -108,7 +104,7 @@ const App = () => {
   const showBookmarks = (list, level = 0) => {
     const bookmarksFormated = [];
     list.forEach((b, i) => {
-      bookmarksFormated.push({ name: b.name, page: b.Ac, level: level, end: false });
+      bookmarksFormated.push({ obj:{...b}, name: b.name, page: b.Ac, level: level, end: false });
       if (b.children.length > 0) {
         const subs = showBookmarks(b.children, level + 1);
         subs.forEach((s, n) => {
@@ -119,7 +115,6 @@ const App = () => {
         bookmarksFormated.push({ ...last, end: true })
       }
     });
-    // console.log('list', bookmarksFormated)
     return bookmarksFormated;
   }
 
@@ -258,6 +253,7 @@ const App = () => {
                             onClick={()=>{
                               docViewer.setCurrentPage(marks.page)
                               setCurrentPage(marks.page)
+                              // docViewer.displayBookmark(marks.obj);
                             }}
                             className='subItem'
                             style={{ marginLeft: `calc(24px * ${marks.level})` }}
@@ -271,6 +267,7 @@ const App = () => {
                             onClick={()=>{
                               docViewer.setCurrentPage(marks.page)
                               setCurrentPage(marks.page)
+                              // docViewer.displayBookmark(marks.obj);
                             }}
                             className='bookmarks_subheading'
                             style={{ marginLeft: `calc(24px * ${marks.level})` }}
