@@ -58,12 +58,14 @@ const SearchContainer = (props) => {
    * first result is found.
    */
   const performSearch = () => {
+    
     clearSearchResults(false);
     const {
       current: {
         value: textToSearch
       }
     } = searchTerm;
+    console.log('term in pdftrom', searchTerm.textToSearch)
     const {
       ePageStop,
       eHighlight,
@@ -218,7 +220,7 @@ const SearchContainer = (props) => {
   if (!open) {
     return (null);
   }
-
+  console.log('searched arr pdftrom', searchResults)
   return (
     <span
       id="search-container"

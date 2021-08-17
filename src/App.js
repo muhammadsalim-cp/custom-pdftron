@@ -9,6 +9,8 @@ import logo2 from './assets/images/headerLogo.png';
 import logo1 from './assets/images/logo1.png';
 import { ReactComponent as ZoomIn } from './assets/images/plusCircle.svg';
 import { ReactComponent as ZoomOut } from './assets/images/minusCircle.svg';
+import { ReactComponent as Note } from './assets/images/note.svg';
+import { ReactComponent as Pen } from './assets/images/pen.svg';
 import { ReactComponent as AnnotationRectangle } from './assets/icons/ic_annotation_square_black_24px.svg';
 import { ReactComponent as AnnotationRedact } from './assets/icons/ic_annotation_add_redact_black_24px.svg';
 import { ReactComponent as AnnotationApplyRedact } from './assets/icons/ic_annotation_apply_redact_black_24px.svg';
@@ -26,7 +28,7 @@ const App = () => {
   const searchTerm = useRef(null);
   const searchContainerRef = useRef(null);
   const pageInput = useRef(null);
-  const [bookmarks, setBookmarks] = useState([]);
+  // const [bookmarks, setBookmarks] = useState([]);
   const [displayBookmarks, setDisplayBookmarks] = useState([]);
   const [currentPage, setCurrentPage] = useState('');
   const [searchValue, setSearchValue] = useState('');
@@ -38,7 +40,7 @@ const App = () => {
   const [docViewer, setDocViewer] = useState(null);
   const [annotManager, setAnnotManager] = useState(null);
   const [searchContainerOpen, setSearchContainerOpen] = useState(false);
-  const [notesText, setNotesText] = useState("");
+  const [stickyAnnotations, setStickyAnnotations] = useState([]);
 
   const Annotations = window.Annotations;
 
@@ -53,59 +55,65 @@ const App = () => {
     docViewer.setScrollViewElement(scrollView.current);
     docViewer.setViewerElement(viewer.current);
     docViewer.setOptions({ enableAnnotations: true, enableLeftPanel: ['bookmarksPanel', 'bookmarksPanelButton'] });
-    docViewer.loadDocument('/files/romeo-and-juliet.pdf');
-    // docViewer.loadDocument('/files/duckett.pdf');
+    // docViewer.loadDocument('/files/romeo-and-juliet.pdf');
+    docViewer.loadDocument('/files/duckett.pdf');
 
 
     setDocViewer(docViewer);
     pageInput.current.style.width = `${pageInput.current.value.length}ch`
 
-    docViewer.on('documentLoaded', () => {
+    docViewer.on('documentLoaded', async() => {
       setCurrentPage(docViewer.getCurrentPage())
       setTotalPages(docViewer.getPageCount())
-      docViewer.setToolMode(docViewer.getTool('AnnotationEdit'))
-      setAnnotManager(docViewer.getAnnotationManager());
+      const am = docViewer.getAnnotationManager();
+      setAnnotManager(am);
+      
+      am.on('annotationsDrawn', (annots) => {
+        console.log('annotation drawn');
+        console.log(annots);
+        console.log("Annotation List : ", am.getAnnotationsList())
+      })
+      am.on('annotationSelected', (annotationList, action) => {
+        console.log('annotation Selected');
+        console.log(annotationList);
+      })
+
+      docViewer.setToolMode(docViewer.getTool('AnnotationEdit'));
+
       pageInput.current.style.width = `${pageInput.current.value.length}ch`
 
       // CREATING BOOKMARKS LIST
       docViewer.getDocument().getBookmarks().then((bookmarks) => {
-
-        // const printOutlineTree = (item, level) => {
-        //   const indent = ' '.repeat(level);
-        //   const name = item.getName();
-        //   console.log(indent + name);
-        //   item.getChildren().map(b => printOutlineTree(b, level + 1));
-        // };
-
-        // bookmarks.map((root) => {
-        //   printOutlineTree(root, 0);
-        // });
-
-        // console.log('bookmarks in useEffect', bookmarks)
         setDisplayBookmarks(showBookmarks(bookmarks))
+      })
 
-        setBookmarks(bookmarks);
-      });
+    })
 
-      docViewer.addEventListener(CoreControls.AnnotationManager.Events.ANNOTATION_SELECTED, () => console.log("Annotation Selected"));
+    docViewer.on('pageNumberUpdated', (page) => {
+      setCurrentPage(page)
+    })
 
-    });
-    // console.log("Instance", getInstance(document.getElementById("viewer")))
-    // CoreControls.UI.addEventListener(CoreControls.UI.Events.VIEWER_LOADED, () => {console.log("load hugya")})
+    console.log(window.WebViewer)
+
   }, []);
 
   // useEffect(()=>{
-  //   if(docViewer){
-  //     docViewer.addEventListener('annotationAdded',(annotations, action) => {
-  //       console.log(1)
+  //   if(annotManager){
+  //     annotManager.on('ANNOTATION_SELECTED', (annots) => {
+  //       console.log('This is the selected annotation');
+  //       console.log(annots);
   //     })
   //   }
-  // }, [docViewer])
+  // },[annotManager])
+
+  useEffect(()=>{
+    pageInput.current.style.width = `${pageInput.current.value.length}ch`
+  },[currentPage])
 
   const showBookmarks = (list, level = 0) => {
     const bookmarksFormated = [];
     list.forEach((b, i) => {
-      bookmarksFormated.push({ name: b.name, page: b.Ac, level: level, end: false });
+      bookmarksFormated.push({ obj: b, name: b.name, page: b.Ac, level: level, end: false });
       if (b.children.length > 0) {
         const subs = showBookmarks(b.children, level + 1);
         subs.forEach((s, n) => {
@@ -116,7 +124,6 @@ const App = () => {
         bookmarksFormated.push({ ...last, end: true })
       }
     });
-    // console.log('list', bookmarksFormated)
     return bookmarksFormated;
   }
 
@@ -174,7 +181,7 @@ const App = () => {
                   ref={pageInput}
                   value={currentPage}
                   onChange={(e) => {
-                    pageInput.current.style.width = `${pageInput.current.value.length}ch`
+                    // pageInput.current.style.width = `${pageInput.current.value.length}ch`
                     setCurrentPage(e.target.value)
                   }}
                   onBlur={pageNavigaton}
@@ -235,6 +242,7 @@ const App = () => {
               docViewer={docViewer}
               searchTermRef={searchTerm}
               searchContainerRef={searchContainerRef}
+              updatePage={()=>setCurrentPage(docViewer.getCurrentPage())}
              />
             <div className='bookmarks_container'>
               <div className='main_bookmarks_container'>
@@ -251,7 +259,11 @@ const App = () => {
                       if (marks.end) {
                         return (
                           <li 
-                            onClick={()=>docViewer.displayBookmark(marks.obj)}
+                            onClick={()=>{
+                              // docViewer.setCurrentPage(marks.page)
+                              // setCurrentPage(marks.page)
+                              docViewer.displayBookmark(marks.obj);
+                            }}
                             className='subItem'
                             style={{ marginLeft: `calc(24px * ${marks.level})` }}
                           > 
@@ -261,7 +273,11 @@ const App = () => {
                       } else {
                         return (
                           <div
-                            onClick={()=>docViewer.displayBookmark(marks.obj)}
+                            onClick={()=>{
+                              // docViewer.setCurrentPage(marks.page)
+                              // setCurrentPage(marks.page)
+                              docViewer.displayBookmark(marks.obj);
+                            }}
                             className='bookmarks_subheading'
                             style={{ marginLeft: `calc(24px * ${marks.level})` }}
                           >
@@ -316,7 +332,7 @@ const App = () => {
             />
           </div> */}
           <div id="viewer" ref={viewer}></div>
-          <div className="flexbox-container">
+          {/* <div className="flexbox-container">
             <SearchContainer
               Annotations={Annotations}
               annotManager={annotManager}
@@ -325,10 +341,31 @@ const App = () => {
               searchContainerRef={searchContainerRef}
               open={true}
             />
+          </div> */}
+
+
+          <div className='side_container right'>
+            <Grid container spacing={2} className='bottom_margin'>
+              <Grid item sm={6} xs={12} >
+                <button className='operation_btn' onClick={createHighlight}>
+                  <Pen style={{width:'24px', height:'24px', marginRight:'10px'}} />
+                  Highlight text
+                </button>
+              </Grid>
+              <Grid item sm={6} xs={12} >
+                <button className='operation_btn' onClick={notesTool}>
+                  <Note style={{width:'24px', height:'24px', marginRight:'10px'}} />
+                  Add note
+                </button>
+              </Grid>
+            </Grid>
+            <div className='bookmarks_container'>
+              <div className='main_bookmarks_container'>
+                <div className='bookmarks_heading' onClick={() => setIsContentOpen(!isContentOpen)}>Notes <ArrowDropUpIcon className={`carrot_icon ${!isContentOpen && 'close'}`} /> </div>
+                
+              </div>
+            </div>
           </div>
-
-
-          {/* <div className='side_container right'>abc</div> */}
 
         </div>
       </div>

@@ -166,44 +166,7 @@ font-size: 18px;
   /* height: 9vh; */
 }
 
-.search_pdf_input{
-  position: relative;
-  top: 0;
-  left: 0;
-}
 
-.search_pdf_input input{
-  border: 1px solid white;
-  border-radius: 8px;
-  padding: 16px 19px;
-  padding-left: 47px;
-  background-color: transparent;
-  outline: none;
-  box-shadow: none;
-  box-sizing: border-box;
-  font-weight: 400;
-  width: 100%;
-  margin-bottom: 24px;
-}
-
-.search_pdf_input input,.search_pdf_input input::placeholder{
-  font-size: 16px;
-  color: white;
-  
-}
-
-.search_pdf_input input::placeholder{
-  opacity: 0.8;
-}
-
-.search_pdf_input svg.search_icon{
-  fill: white;
-  position: absolute;
-  top: 16px;
-  left:19px;
-  width: 17px;
-  height: 17px;
-}
 
 .bookmarks_container{
   padding: 24px;
@@ -286,6 +249,26 @@ font-size: 18px;
   color: #929196;
   font-size: 16px;
   font-weight: 400;
+  cursor: pointer;
+}
+
+.bottom_margin{
+  margin-bottom: 24px !important;
+}
+
+.operation_btn{
+  width: 100%;
+  outline: none;
+  background-color: white;
+  border-radius: 8px;
+  padding: 14px 22px;
+  text-align: left;
+  display: flex;
+  align-items: center;
+  font-size: 18px;
+  font-weight: 400;
+  color: #3B3C44;
+  border: none;
   cursor: pointer;
 }
 
