@@ -64,7 +64,7 @@ const App = () => {
       setCurrentPage(docViewer.getCurrentPage())
       setTotalPages(docViewer.getPageCount())
       docViewer.setToolMode(docViewer.getTool('AnnotationEdit'))
-      // setAnnotManager(annotationManager);
+      setAnnotManager(docViewer.getAnnotationManager());
       pageInput.current.style.width = `${pageInput.current.value.length}ch`
 
       // CREATING BOOKMARKS LIST
