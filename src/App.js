@@ -48,7 +48,7 @@ const App = () => {
     docViewer.loadDocument("https://wtf.tw/ref/duckett.pdf",{
       filename: 'duckett.pdf',
       customHeaders: {
-        Authorization: 'Basic YWxhZGRpbjpvcGVuc2VzYW1l'
+        // Authorization: 'Basic YWxhZGRpbjpvcGVuc2VzYW1l'
       },
     });
     // docViewer.loadDocument('/files/duckett.pdf');
