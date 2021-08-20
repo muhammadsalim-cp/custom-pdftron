@@ -45,13 +45,23 @@ const App = () => {
       enableAnnotations: true,
       enableLeftPanel: ["bookmarksPanel", "bookmarksPanelButton"],
     });
-    docViewer.loadDocument("https://wtf.tw/ref/duckett.pdf",{
-      filename: 'duckett.pdf',
-      customHeaders: {
-        // Authorization: 'Basic YWxhZGRpbjpvcGVuc2VzYW1l'
-      },
-    });
-    // docViewer.loadDocument('/files/duckett.pdf');
+    // docViewer.loadDocument("https://bluemetric.s3.us-west-1.amazonaws.com/duckett.pdf",{
+    //   filename: 'duckett.pdf',
+    //   customHeaders: {
+    //     "Access-Control-Allow-Origin":'*',
+    //     "Access-Control-Allow-Credentials" : true
+    //     // Authorization: 'Basic YWxhZGRpbjpvcGVuc2VzYW1l'
+    //   },
+    // });
+    docViewer.loadDocument('/files/duckett.pdf');
+
+    // window.document.addEventListener('wheel', (e)=>alert('worked'));
+    window.visualViewport.addEventListener("resize", viewportHandler);
+    function viewportHandler(event) {
+      // NOTE: This doesn't actually work at time of writing
+      console.log('worked')
+      event.preventDefault();
+    }
 
     setDocViewer(docViewer);
     pageInput.current.style.width = `${pageInput.current.value.length}ch`;
@@ -161,8 +171,8 @@ const App = () => {
   const createHighlight = () => {
     highlighToolSelected
       ? docViewer.setToolMode(
-          docViewer.getTool(window.Tools.ToolNames.HIGHLIGHT)
-        )
+        docViewer.getTool(window.Tools.ToolNames.HIGHLIGHT)
+      )
       : docViewer.setToolMode(docViewer.getTool("AnnotationEdit"));
     setHighlightToolSelected(!highlighToolSelected);
   };
@@ -336,7 +346,7 @@ const App = () => {
                         <input
                           type="text"
                           value={Subject}
-                          onChange={(e) => {}}
+                          onChange={(e) => { }}
                         />
                       )}
                     </div>
