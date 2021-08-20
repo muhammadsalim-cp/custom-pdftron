@@ -10,7 +10,7 @@ import { ReactComponent as Note } from './assets/images/note.svg';
 import { ReactComponent as Pen } from './assets/images/pen.svg';
 import SearchBox from './components/searchBox/SearchBox';
 import './App.css';
-import {getInstance} from "@pdftron/webviewer"
+import { getInstance } from "@pdftron/webviewer"
 
 const App = () => {
   const viewer = useRef(null);
@@ -28,6 +28,7 @@ const App = () => {
   const [docViewer, setDocViewer] = useState(null);
   const [annotManager, setAnnotManager] = useState(null);
   const [stickyAnnotations, setStickyAnnotations] = useState([]);
+  const [annotations, setAnnotations] = useState([]);
 
   const Annotations = window.Annotations;
 
@@ -49,21 +50,24 @@ const App = () => {
     setDocViewer(docViewer);
     pageInput.current.style.width = `${pageInput.current.value.length}ch`
 
-    docViewer.on('documentLoaded', async() => {
+    const annotManager = docViewer.getAnnotationManager();
+
+    docViewer.on('documentLoaded', async () => {
       setCurrentPage(docViewer.getCurrentPage())
       setTotalPages(docViewer.getPageCount())
-      const am = docViewer.getAnnotationManager();
-      setAnnotManager(am);
-      
-      am.on('annotationsDrawn', (annots) => {
-        // console.log('annotation drawn');
-        // console.log(annots);
-        // console.log("Annotation List : ", am.getAnnotationsList())
-      })
-      am.on('annotationSelected', (annotationList, action) => {
-        // console.log('annotation Selected');
-        // console.log(annotationList);
-      })
+      // const am = docViewer.getAnnotationManager();
+      // setAnnotManager(am);
+      setAnnotManager(annotManager);
+
+      // am.on('annotationsDrawn', (annots) => {
+      //   // console.log('annotation drawn');
+      //   // console.log(annots);
+      //   // console.log("Annotation List : ", am.getAnnotationsList())
+      // })
+      // am.on('annotationSelected', (annotationList, action) => {
+      //   // console.log('annotation Selected');
+      //   // console.log(annotationList);
+      // })
 
       docViewer.setToolMode(docViewer.getTool('AnnotationEdit'));
 
@@ -71,6 +75,14 @@ const App = () => {
       docViewer.getDocument().getBookmarks().then((bookmarks) => {
         setDisplayBookmarks(showBookmarks(bookmarks))
       })
+
+      annotManager.on('annotationChanged', () => {
+        setAnnotations(
+          annotManager
+            .getAnnotationsList()
+            .filter(annot => annot.Listable && !annot.isReply() && !annot.Hidden && !annot.isGrouped() && annot.ToolName !== window.Tools.ToolNames.CROP)
+        );
+      });
 
     })
 
@@ -82,9 +94,9 @@ const App = () => {
 
   }, []);
 
-  useEffect(()=>{
+  useEffect(() => {
     pageInput.current.style.width = `${pageInput.current.value.length}ch`
-  },[currentPage])
+  }, [currentPage])
 
   const showBookmarks = (list, level = 0) => {
     const bookmarksFormated = [];
@@ -157,7 +169,7 @@ const App = () => {
                     setCurrentPage(e.target.value)
                   }}
                   onBlur={pageNavigaton}
-                /> / <span style={{color:'#606165'}}>{totalPages}</span>
+                /> / <span style={{ color: '#606165' }}>{totalPages}</span>
               </form>
               <div className='zoom_buttons'>
                 <button onClick={zoomIn}>
@@ -182,75 +194,88 @@ const App = () => {
       </div>
       <div className='pdf_body'>
         <div className='pdf_side_container pdf_left'>
-            <SearchBox
-              Annotations={Annotations}
-              annotManager={annotManager}
-              docViewer={docViewer}
-              searchTermRef={searchTerm}
-              searchContainerRef={searchContainerRef}
-              updatePage={()=>setCurrentPage(docViewer.getCurrentPage())}
-             />
-            <div className='bookmarks_container'>
-              <div className='main_bookmarks_container'>
-                <div className='bookmarks_heading' onClick={() => setIsContentOpen(!isContentOpen)}>Contents <ArrowDropUpIcon className={`carrot_icon ${!isContentOpen && 'close'}`} /> </div>
-                {
-                  isContentOpen &&
-                  <>
-                    {displayBookmarks.map(marks => {
-                      if (marks.end) {
-                        return (
-                          <li 
-                            onClick={()=>{
-                              docViewer.displayBookmark(marks.obj);
-                            }}
-                            className='subItem'
-                            style={{ marginLeft: `calc(24px * ${marks.level})` }}
-                          > 
-                            {marks.name} 
-                          </li>
-                        );
-                      } else {
-                        return (
-                          <div
-                            onClick={()=>{
-                              docViewer.displayBookmark(marks.obj);
-                            }}
-                            className='bookmarks_subheading'
-                            style={{ marginLeft: `calc(24px * ${marks.level})` }}
-                          >
-                            {marks.name}
-                          </div>
-                        );
-                      }
-                    })}
-                  </>
-                }
-              </div>
+          <SearchBox
+            Annotations={Annotations}
+            annotManager={annotManager}
+            docViewer={docViewer}
+            searchTermRef={searchTerm}
+            searchContainerRef={searchContainerRef}
+            updatePage={() => setCurrentPage(docViewer.getCurrentPage())}
+          />
+          <div className='bookmarks_container'>
+            <div className='main_bookmarks_container'>
+              <div className='bookmarks_heading' onClick={() => setIsContentOpen(!isContentOpen)}>Contents <ArrowDropUpIcon className={`carrot_icon ${!isContentOpen && 'close'}`} /> </div>
+              {
+                isContentOpen &&
+                <>
+                  {displayBookmarks.map(marks => {
+                    if (marks.end) {
+                      return (
+                        <li
+                          onClick={() => {
+                            docViewer.displayBookmark(marks.obj);
+                          }}
+                          className='subItem'
+                          style={{ marginLeft: `calc(24px * ${marks.level})` }}
+                        >
+                          {marks.name}
+                        </li>
+                      );
+                    } else {
+                      return (
+                        <div
+                          onClick={() => {
+                            docViewer.displayBookmark(marks.obj);
+                          }}
+                          className='bookmarks_subheading'
+                          style={{ marginLeft: `calc(24px * ${marks.level})` }}
+                        >
+                          {marks.name}
+                        </div>
+                      );
+                    }
+                  })}
+                </>
+              }
             </div>
+          </div>
         </div>
         <div className='pdf_main' ref={scrollView} >
           <div id="viewer" ref={viewer}></div>
         </div>
         <div className='pdf_side_container pdf_right'>
-            <Grid container spacing={2} className='bottom_margin'>
-              <Grid item md={6} sm={12} xs={12} >
-                <button className='operation_btn' onClick={createHighlight}>
-                  <Pen style={{width:'1.5rem', height:'1.5rem', paddingRight:'0.625rem'}} />
-                  Highlight text
-                </button>
-              </Grid>
-              <Grid item md={6} sm={12} xs={12} >
-                <button className='operation_btn' onClick={notesTool}>
-                  <Note style={{width:'1.5rem', height:'1.5rem', paddingRight:'0.625rem'}} />
-                  Add note
-                </button>
-              </Grid>
+          <Grid container spacing={2} className='bottom_margin'>
+            <Grid item md={6} sm={12} xs={12} >
+              <button className='operation_btn' onClick={createHighlight}>
+                <Pen style={{ width: '1.5rem', height: '1.5rem', paddingRight: '0.625rem' }} />
+                Highlight text
+              </button>
             </Grid>
-            <div className='bookmarks_container'>
-              <div className='main_bookmarks_container'>
-                <div className='bookmarks_heading' onClick={() => setIsContentOpen(!isContentOpen)}>Notes <ArrowDropUpIcon className={`carrot_icon ${!isContentOpen && 'close'}`} /> </div>
+            <Grid item md={6} sm={12} xs={12} >
+              <button className='operation_btn' onClick={notesTool}>
+                <Note style={{ width: '1.5rem', height: '1.5rem', paddingRight: '0.625rem' }} />
+                Add note
+              </button>
+            </Grid>
+          </Grid>
+          <div className='bookmarks_container'>
+            <div className='main_bookmarks_container'>
+              <div className='bookmarks_heading' onClick={() => setIsContentOpen(!isContentOpen)}>Notes <ArrowDropUpIcon className={`carrot_icon ${!isContentOpen && 'close'}`} /> </div>
+              <div id="notes-panel">
+                {
+                  annotations.map((annot, idx) => {
+                    const { Subject, DateModified } = annot;
+                    return (
+                      <div key={`annotation_${idx}`} className="note">
+                        <p>{Subject}</p>
+                        <p>{DateModified.toString()}</p>
+                      </div>
+                    );
+                  })
+                }
               </div>
             </div>
+          </div>
         </div>
       </div>
     </div>
