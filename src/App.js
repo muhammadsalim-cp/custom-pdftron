@@ -45,15 +45,15 @@ const App = () => {
       enableAnnotations: true,
       enableLeftPanel: ["bookmarksPanel", "bookmarksPanelButton"],
     });
-    // docViewer.loadDocument("https://bluemetric.s3.us-west-1.amazonaws.com/duckett.pdf",{
-    //   filename: 'duckett.pdf',
-    //   customHeaders: {
-    //     "Access-Control-Allow-Origin":'*',
-    //     "Access-Control-Allow-Credentials" : true
-    //     // Authorization: 'Basic YWxhZGRpbjpvcGVuc2VzYW1l'
-    //   },
-    // });
-    docViewer.loadDocument('/files/duckett.pdf');
+    docViewer.loadDocument("https://bluemetric.s3.us-west-1.amazonaws.com/duckett.pdf",{
+      filename: 'duckett.pdf',
+      customHeaders: {
+        "Access-Control-Allow-Origin":'*',
+        "Access-Control-Allow-Credentials" : true
+        // Authorization: 'Basic YWxhZGRpbjpvcGVuc2VzYW1l'
+      },
+    });
+    // docViewer.loadDocument('/files/duckett.pdf');
 
     // window.document.addEventListener('wheel', (e)=>alert('worked'));
     window.visualViewport.addEventListener("resize", viewportHandler);
