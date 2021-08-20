@@ -45,7 +45,12 @@ const App = () => {
       enableAnnotations: true,
       enableLeftPanel: ["bookmarksPanel", "bookmarksPanelButton"],
     });
-    docViewer.loadDocument("/files/romeo-and-juliet.pdf");
+    docViewer.loadDocument("https://wtf.tw/ref/duckett.pdf",{
+      filename: 'duckett.pdf',
+      customHeaders: {
+        Authorization: 'Basic YWxhZGRpbjpvcGVuc2VzYW1l'
+      },
+    });
     // docViewer.loadDocument('/files/duckett.pdf');
 
     setDocViewer(docViewer);
