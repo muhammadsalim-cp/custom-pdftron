@@ -222,9 +222,9 @@ const App = () => {
                 <button onClick={zoomOut}>
                   <ZoomOut />
                 </button>
-                <button onClick={handTool}>
+                {/* <button onClick={handTool}>
                   <ZoomOut />
-                </button>
+                </button> */}
               </div>
               <button onClick={fitMode}>
                 <FullWidth />
@@ -297,7 +297,7 @@ const App = () => {
           <div id="viewer" ref={viewer}></div>
         </div>
         <div className="pdf_side_container pdf_right">
-          <Grid container spacing={2} className="bottom_margin">
+          {/* <Grid container spacing={1} className="bottom_margin">
             <Grid item md={6} sm={12} xs={12}>
               <button className="operation_btn" onClick={createHighlight}>
                 <Pen
@@ -322,7 +322,29 @@ const App = () => {
                 Add note
               </button>
             </Grid>
-          </Grid>
+          </Grid> */}
+          <div className='pdf_btn_container'>
+            <button className='pdf_btn' onClick={createHighlight} style={{marginRight:'0.625rem'}}>
+                <Pen
+                  style={{
+                    width: "1.5rem",
+                    height: "1.5rem",
+                    paddingRight: "0.625rem",
+                  }}
+                />
+                Highlight text
+            </button>
+            <button className='pdf_btn' onClick={notesTool}>
+                <Note
+                  style={{
+                    width: "1.5rem",
+                    height: "1.5rem",
+                    paddingRight: "0.625rem",
+                  }}
+                />
+                Add note
+            </button>
+          </div>
           <div className="bookmarks_container">
             <div className="main_bookmarks_container">
               <div
